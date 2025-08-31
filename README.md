@@ -10,6 +10,12 @@ A tiny, open‑source, weekend project to help surface long‑forgotten Spotify 
   - Or upload a local Spotify JSON export you already have.
 - Once loaded, you can filter/search playlists and tracks, view quick stats (top artists, when you added tracks), and open songs on Spotify or search them on YouTube Music.
 
+![Screenshot of PlayListory application](docs/img/screenshot-1.png)
+
+
+![Screenshot of PlayListory stats](docs/img/screenshot-2.png)
+
+
 ### Basic principles
 
 - Privacy by default: processing happens locally in your browser.
