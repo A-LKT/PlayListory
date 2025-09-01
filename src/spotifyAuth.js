@@ -41,6 +41,10 @@ export function getStoredAccessToken() {
   return token;
 }
 
+export function hasRefreshToken() {
+  return !!localStorage.getItem(LS_KEYS.refreshToken);
+}
+
 export function clearTokens() {
   for (const key of Object.values(LS_KEYS)) localStorage.removeItem(key);
 }

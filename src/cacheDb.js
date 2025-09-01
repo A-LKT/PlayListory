@@ -52,6 +52,7 @@ async function clearAll() {
 // Public API for playlists cache
 
 const PLAYLISTS_KEY = 'playlistsWithTracks';
+const BACKUP_KEY = 'playlistory_cache_backup_v1';
 
 export async function savePlaylistsCache(playlists, user = null) {
   const record = {
@@ -61,21 +62,46 @@ export async function savePlaylistsCache(playlists, user = null) {
     createdAt: Date.now(),
   };
   await putRecord(record);
+  try {
+    const backup = {
+      data: record.data,
+      user: record.user || null,
+      createdAt: record.createdAt,
+    };
+    localStorage.setItem(BACKUP_KEY, JSON.stringify(backup));
+  } catch {}
   return { createdAt: record.createdAt };
 }
 
 export async function loadPlaylistsCache() {
   const record = await getRecord(PLAYLISTS_KEY);
-  if (!record) return null;
-  return {
-    playlists: record.data,
-    user: record.user || null,
-    createdAt: record.createdAt,
-  };
+  if (record) {
+    return {
+      playlists: record.data,
+      user: record.user || null,
+      createdAt: record.createdAt,
+    };
+  }
+  // Fallback to localStorage backup (for browsers/devices that clear IDB, or private mode)
+  try {
+    const raw = localStorage.getItem(BACKUP_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && parsed.data) {
+        return {
+          playlists: parsed.data,
+          user: parsed.user || null,
+          createdAt: parsed.createdAt || null,
+        };
+      }
+    }
+  } catch {}
+  return null;
 }
 
 export async function purgeCache() {
   await clearAll();
+  try { localStorage.removeItem(BACKUP_KEY); } catch {}
 }
 
 

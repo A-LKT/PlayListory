@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { beginLogin, handleRedirectCallback, getStoredAccessToken, clearTokens } from './spotifyAuth.js'
+import { beginLogin, handleRedirectCallback, getStoredAccessToken, clearTokens, hasRefreshToken, getValidAccessToken } from './spotifyAuth.js'
 import { getPlaylistsWithTracks, getCurrentUserProfile } from './spotifyApi.js'
 import { sanitizePlaylistsForStorage } from './sanitize.js'
 import { loadPlaylistsCache, savePlaylistsCache, purgeCache as purgeCacheDb } from './cacheDb.js'
@@ -393,6 +393,10 @@ export default function App() {
           if (cached.user && (cached.user.id || cached.user.display_name)) {
             setCurrentUser({ id: cached.user.id || null, display_name: cached.user.display_name || null })
           }
+        }
+        // Attempt silent refresh if only refresh token exists
+        if (!cancelled && !getStoredAccessToken() && hasRefreshToken()) {
+          try { await getValidAccessToken() } catch {}
         }
       } catch (e) {
         if (!cancelled) setError(String(e?.message || e))
