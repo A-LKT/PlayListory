@@ -1,4 +1,5 @@
 ## PlayListory
+[Live demo](https://a-lkt.github.io/PlayListory)
 
 A tiny, open‑source, weekend project to help surface long‑forgotten Spotify likes and playlists. I needed a way to access an old, no‑longer‑premium Spotify account so I could rediscover my liked songs and then listen to them on YouTube Music (which I’m subscribed to now). This app lets you browse your Spotify library in the browser and quickly jump to YouTube Music searches for any track.
 
